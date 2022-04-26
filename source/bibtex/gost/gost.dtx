@@ -1305,13 +1305,13 @@ FUNCTION {output.nonnull}
         { output.state before.all =
             'write$
             { output.state after.dblslash =
-                { "~//" * reset.language * " " * write$ }
+                { "\;//" * reset.language * " " * write$ }
                 { output.state after.slash =
-                    { "~/ " * write$ }
+                    { "\;/ " * write$ }
                     { output.state after.colon =
-                        { "~: " * write$ }
+                        { "\;: " * write$ }
                         { output.state after.semicolon =
-                            { "~; " * write$ }
+                            { "\;; " * write$ }
 	                        { add.period$ " " * write$ }
     	                  if$
                         }
@@ -2171,17 +2171,17 @@ if$}
 %    \begin{macrocode}
 FUNCTION {bbl.url}
 { curlanguage "english" =
-   {"Access mode"}
+   {"URL"}
    { curlanguage "ukrainian" =
-%<!utf8>      { "{\CYRR\cyre\cyrzh\cyri\cyrm\ \cyrd\cyro\cyrs\cyrt\cyru\cyrp\cyru}" }
+%<!utf8>      { "{URL" }
 %<utf8>      { "{Режим доступу}" }
       { curlanguage "russian" =
-%<!utf8>         { "{\CYRR\cyre\cyrzh\cyri\cyrm\ \cyrd\cyro\cyrs\cyrt\cyru\cyrp\cyra}" }
-%<utf8>         { "{Режим доступа}" }
+%<!utf8>         { "{URL}" }
+%<utf8>         { "{URL}" }
          { curlanguage "german" =
-            { "{online; abgerufen}" }
+            { "{URL}" }
             { curlanguage "french" =
-                { "Mode d'acc\`{e}s" }
+                { "URL" }
                 { "language is not defined: " curlanguage " in bbl.url" * * warning$ "online; accessed" }
             if$}
          if$}
@@ -2373,6 +2373,24 @@ FUNCTION {bbl.media.online}
 %<!utf8>          "\cyrr\cyre\cyrs\cyru\cyrr\cyrs\ \cyro\cyrn\cyrl\cyra\cyrishrt\cyr}" * }
 %<utf8>        { "{Електронний ресурс онлайн}" }
         { "language is not defined: " curlanguage " in bbl.media" * * warning$ "Electronic resource" }
+      if$}
+   if$}
+if$}
+
+%    \end{macrocode}
+% \DescribeFunction{bbl.media.site}
+% \changes{v1.2ia}{26 Apr 2022}{\texttt{site} added}
+%    \begin{macrocode}
+FUNCTION {bbl.media.site}
+{ curlanguage "english" =
+   { "site" }
+   { curlanguage "russian" =
+%<!utf8>      { "{\cyr\CYRS\cyra\cyrishrt\cyrt}" * }
+%<utf8>      { "{сайт}" }
+      { curlanguage "ukrainian" =
+%<!utf8>      { "{\cyr\CYRS\cyra\cyrishrt\cyrt}" * }
+%<utf8>        { "{сайт}" }
+        { "language is not defined: " curlanguage " in bbl.media" * * warning$ "site" }
       if$}
    if$}
 if$}
@@ -4121,6 +4139,17 @@ FUNCTION {output.url}
 }
 
 %    \end{macrocode}
+% \DescribeFunction{output.doi}
+%    \begin{macrocode}
+FUNCTION {output.doi}
+{
+  doi empty$
+    'skip$
+    { "~\doi{" doi * "}" * output }
+  if$
+}
+
+%    \end{macrocode}
 % \DescribeFunction{format.annote}
 % \changes{v0.8}{06 Jun 2003}{macro \cs{BibAnnote} added}
 %    \begin{macrocode}
@@ -4210,6 +4239,7 @@ FUNCTION {add.media}
     { media empty$
       { type$ "online" =
           { " " * bbl.media.online bracketise * }
+          { " " * bbl.media.site   bracketise * }
           { " " * bbl.media.text   bracketise * }
         if$
       }
@@ -4442,6 +4472,7 @@ FUNCTION {article}
   new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -4492,6 +4523,7 @@ FUNCTION {book}
 %<eprint>  new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -4531,6 +4563,7 @@ FUNCTION {booklet}
   new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -4585,6 +4618,7 @@ FUNCTION {inbook}
 %<eprint>  new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -4634,6 +4668,7 @@ FUNCTION {incollection}
   new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -4677,6 +4712,7 @@ FUNCTION {proceedings}
   new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -4736,6 +4772,7 @@ FUNCTION {inproceedings}
   new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -4791,6 +4828,7 @@ FUNCTION {manual}
   new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -4846,6 +4884,7 @@ FUNCTION {patent}
   new.block
   note output
   new.sentence
+  output.doi
   output.url
   format.annote output
   new.block
@@ -4877,6 +4916,7 @@ FUNCTION {misc}
   new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -4911,6 +4951,7 @@ FUNCTION {unpublished}
   new.block
   note "note" output.check
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -4950,6 +4991,7 @@ FUNCTION {online}
   output.address.publisher
   format.date output
   new.block
+  output.doi
 %  format.url output
   output.eprint.url
   new.sentence
@@ -5012,6 +5054,7 @@ FUNCTION {thesis}
   new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -5055,6 +5098,7 @@ FUNCTION {thesis}
 %  new.block                % v.2
 %  format.pages.page output % v.2
 %  new.sentence
+%  output.doi
 %%  format.url output
 %  output.eprint.url
 %  format.annote output
@@ -5091,6 +5135,7 @@ FUNCTION {report}
   new.block                % v.2
   format.pages.page output % v.2
   new.sentence % или new.block ?
+  output.doi
   output.eprint.url
   new.block
   note output
@@ -5138,6 +5183,7 @@ FUNCTION {phdthesis}
   new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -5176,6 +5222,7 @@ FUNCTION {mastersthesis}
   new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -5214,6 +5261,7 @@ FUNCTION {docthesis}
   new.block
   note output
   new.sentence
+  output.doi
 %  format.url output
   output.eprint.url
   format.annote output
@@ -5288,6 +5336,7 @@ FUNCTION {techreport}
   new.block                % v.2
   format.pages.page output % v.2
   new.sentence % или new.block ?
+  output.doi
   output.eprint.url
   new.block
   note output
@@ -5687,7 +5736,7 @@ FUNCTION {author.title.sort}
         {author sort.format.names }
         {title sort.format.title}
       if$
-     }  	
+     }
   if$
 }
 %    \end{macrocode}
@@ -6019,6 +6068,6 @@ EXECUTE {end.bib}
 %</bst>
 %    \end{macrocode}
 %
-%\CheckSum{802}
+%\CheckSum{790}
 %
 %\Finale
